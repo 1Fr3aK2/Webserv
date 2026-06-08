@@ -35,6 +35,11 @@ All I/O multiplexing runs through a **single global `poll()` call** — no threa
 - **Custom error pages** — configurable per server block
 - **Drain-before-close** — graceful teardown on 413 responses (avoids TCP RST)
 
+### 🔒 Security
+- **Path traversal prevention** — request paths are validated and canonicalized before any filesystem access
+- **Request validation** — malformed or oversized inputs are rejected upstream, before touching any resource
+- **Process isolation** — CGI runs in a forked child process; a crashed or malicious script cannot affect the server
+
 ### ⚙️ CGI Execution
 - **Fully async CGI** — `fork/execve` integrated into the `poll()` loop (no blocking `waitpid`)
 - **Pipe-based I/O** — stdin/stdout streamed through `poll()` events
@@ -200,9 +205,43 @@ curl -v -X DELETE http://localhost:8080/upload/test.txt
 
 ---
 
+## 📚 Concepts
+
+```
+- Server: A computer that listens for incoming requests over a network and sends back a response.
+
+- Web Server: A server that specifically understands HTTP, the language browsers use to ask for
+  web pages, images, and other resources.
+
+- HTTP Protocol: The set of rules that define how a client and server communicate. A client sends
+  a request following these rules, and the server replies following the same rules.
+
+- Sockets: The endpoint of a network connection. A socket is what the server opens to start
+  listening for incoming connections.
+
+- IP & Port: An IP address identifies a machine on the network. A port identifies a specific
+  service running on that machine. Together they tell the network exactly where to deliver a
+  message, like a street address and an apartment number.
+
+- Methods: The action the client wants to perform. GET means "give me this resource",
+  POST means "here is some data to process", DELETE means "remove this resource".
+
+- CGI (Common Gateway Interface): A standard for running external programs on the server to
+  generate dynamic responses. Instead of sending a file, the server executes a script and sends
+  its output back to the client.
+
+- Request: The message sent by the client to the server. It contains a method, a path, headers
+  (metadata), and sometimes a body (extra data).
+
+- Response: The message the server sends back. It contains a status code (200 OK, 404 Not Found,
+  etc.), headers, and usually a body with the requested content.
+```
+
+---
+
 ## 👥 Authors
 
-- **[1F3aK2](https://github.com/1Fr3aK2)** & **[dsteiger](https://github.com/dsteiger42)**
+- **[1Fr3aK2](https://github.com/1Fr3aK2)** & **[dsteiger42](https://github.com/dsteiger42)**
 
 ---
 
